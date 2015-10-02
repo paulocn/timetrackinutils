@@ -1,6 +1,7 @@
 package ciandt.timetrackinutils;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ciandt.timetrackinutils.storage.EncriptedSaver;
 import ciandt.timetrackinutils.timetracking.TTRequester;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, UserConfigFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -45,9 +47,29 @@ public class MainActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        switch (position){
+            case 0:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                break;
+            case 1:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, UserConfigFragment.newInstance())
+                        .commit();
+                break;
+            case 2:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                break;
+            default:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                break;
+        }
+
     }
 
     public void onSectionAttached(int number) {
@@ -75,7 +97,16 @@ public class MainActivity extends ActionBarActivity
         TTRequester requester = new TTRequester();
         requester.configureRequest("teste", "test");
 //        requester.makeRequest();
+    }
+    public void actionSavePassword(View view) {
+        EncriptedSaver.saveEncripted(this, "USERNAME", "");
+        EncriptedSaver.saveEncripted(this, "PASSWORD", "");
 
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //TODO what?
     }
 
     /**
