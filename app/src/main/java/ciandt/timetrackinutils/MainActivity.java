@@ -1,6 +1,8 @@
 package ciandt.timetrackinutils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,11 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ciandt.timetrackinutils.storage.EncriptedSaver;
-import ciandt.timetrackinutils.timetracking.TTRequester;
+import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
+import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
+import ciandt.timetrackinutils.timetracking.TTCallbacks;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, UserConfigFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        UserConfigFragment.OnFragmentInteractionListener,
+        TTCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -93,14 +98,36 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
+    //isso meio que esta no lugar errado... talvez em um fragmento separado?
     public void actionApontar(View view) {
-        TTRequester requester = new TTRequester();
-        requester.configureRequest("teste", "test");
-//        requester.makeRequest();
+
+        TTAsyncRequest req = new TTAsyncRequest(this);
+        req.execute(MemoryStorageSingleton.getInstance().getUsername(this),
+                    MemoryStorageSingleton.getInstance().getPassword(this));
+
     }
-    public void actionSavePassword(View view) {
-        EncriptedSaver.saveEncripted(this, "USERNAME", "");
-        EncriptedSaver.saveEncripted(this, "PASSWORD", "");
+
+    @Override
+    public void requestFinished(boolean Success) {
+        //Trocar strings hardcoded
+        if (Success) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Time Tracking")
+                    .setMessage("Hora apontada com sucesso!").
+                    setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                this.finalize();
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        }
+                    }).show();
+        }else{
+            new AlertDialog.Builder(this)
+                    .setTitle("Time Tracking")
+                    .setMessage("Falha no apontamento!").show();
+        }
 
     }
 

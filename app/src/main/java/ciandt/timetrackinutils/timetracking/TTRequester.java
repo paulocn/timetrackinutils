@@ -4,13 +4,10 @@ package ciandt.timetrackinutils.timetracking;
  * Created by paulocn on 01/10/15.
  */
 
-import android.util.Log;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -53,36 +50,27 @@ public class TTRequester {
         ttParameters.addParam("password", pass);
     }
 
-    public void makeRequest(){
-        new Thread(new Runnable() {
-            public void run(){
+    public HttpResponse makeRequest(){
 
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(ttParameters.mParams));
+        try {
 
-                    //Weird
-                    for (NameValuePair b : ttParameters.mHeaders) {
-                        Header header = new BasicHeader(b.getName(), b.getValue());
-                        httpPost.addHeader(header);
-                    }
-
-
-                }
-                catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-
-                try {
-                    response = httpClient.execute(httpPost);
-                    Log.d("PAULO", response.toString());
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            httpPost.setEntity(new UrlEncodedFormEntity(ttParameters.mParams));
+            for (NameValuePair b : ttParameters.mHeaders) {
+                Header header = new BasicHeader(b.getName(), b.getValue());
+                httpPost.addHeader(header);
             }
-        }).start();
+            response = httpClient.execute(httpPost);
+
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return response;
     }
 
 
