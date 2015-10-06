@@ -5,6 +5,8 @@
     <string name="title_section2">Usuário e Senha</string>
     <string name="title_section3">Configurações</string>
 
+    <string name="string_marcacao">Marcação</string>
+
     <string name="navigation_drawer_open">Abrir a navigation drawer</string>
     <string name="navigation_drawer_close">Fechar a navigation drawer</string>
 

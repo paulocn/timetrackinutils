@@ -10,12 +10,32 @@
         android:layout_height="wrap_content" />
 
     <Button
+
+        android:drawableLeft="@drawable/btok"
+        android:textColor="#000000"
+        android:drawablePadding="5sp"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/string_marcacao"
         android:id="@+id/button"
         android:onClick="actionApontar"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/button"
+        android:background="@drawable/fundo_tt" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:background="@drawable/relogio_tt"
+        android:layout_alignTop="@id/imageView"
+        android:layout_alignEnd="@id/button" />
 
 </RelativeLayout>
