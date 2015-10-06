@@ -5,9 +5,12 @@ package ciandt.timetrackinutils.timetracking;
  */
 
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -23,11 +26,19 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 
+import ciandt.timetrackinutils.storage.Constants;
+
+import static java.lang.Thread.sleep;
 
 
 public class TTRequester {
@@ -50,27 +61,163 @@ public class TTRequester {
         ttParameters.addParam("password", pass);
     }
 
-    public HttpResponse makeRequest(){
+    public HttpResponse RequestAponta(){
 
-        try {
-
-            httpPost.setEntity(new UrlEncodedFormEntity(ttParameters.mParams));
-            for (NameValuePair b : ttParameters.mHeaders) {
-                Header header = new BasicHeader(b.getName(), b.getValue());
-                httpPost.addHeader(header);
+        if (Constants.kMOCK){
+            try {
+                sleep(2000);
+                return null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return null;
             }
-            response = httpClient.execute(httpPost);
+        }else {
+            try {
+
+                httpPost.setEntity(new UrlEncodedFormEntity(ttParameters.mParams));
+                for (NameValuePair b : ttParameters.mHeaders) {
+                    Header header = new BasicHeader(b.getName(), b.getValue());
+                    httpPost.addHeader(header);
+                }
+                response = httpClient.execute(httpPost);
 
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return response;
+        }
+    }
+
+    public static JSONObject parseJsonResponseFromTT(HttpResponse response){
+        String str = getResponseBody(response);
+        JSONObject json = null;
+        try {
+            json = new JSONObject(str);
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
+        return json;
+    }
 
-        return response;
+    public static String parseMessageFromTTJSON(JSONObject json){
+
+        try {
+            return json.getJSONObject("msg").getString("msg");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //Remove from here
+    private static String getResponseBody(HttpResponse response) {
+
+        String response_text = null;
+        HttpEntity entity = null;
+        try {
+            entity = response.getEntity();
+            response_text = _getResponseBody(entity);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            if (entity != null) {
+                try {
+                    entity.consumeContent();
+                } catch (IOException e1) {
+                }
+            }
+        }
+        return response_text;
+    }
+
+    private static String _getResponseBody(final HttpEntity entity) throws IOException, ParseException {
+
+        if (entity == null) {
+            throw new IllegalArgumentException("HTTP entity may not be null");
+        }
+
+        InputStream instream = entity.getContent();
+
+        if (instream == null) {
+            return "";
+        }
+
+        if (entity.getContentLength() > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException(
+
+                    "HTTP entity too large to be buffered in memory");
+        }
+
+        String charset = getContentCharSet(entity);
+
+        if (charset == null) {
+
+            charset = HTTP.DEFAULT_CONTENT_CHARSET;
+
+        }
+
+        Reader reader = new InputStreamReader(instream, charset);
+
+        StringBuilder buffer = new StringBuilder();
+
+        try {
+
+            char[] tmp = new char[1024];
+
+            int l;
+
+            while ((l = reader.read(tmp)) != -1) {
+
+                buffer.append(tmp, 0, l);
+
+            }
+
+        } finally {
+
+            reader.close();
+
+        }
+
+        return buffer.toString();
+
+    }
+
+    private static String getContentCharSet(final HttpEntity entity) throws ParseException {
+
+        if (entity == null) {
+            throw new IllegalArgumentException("HTTP entity may not be null");
+        }
+
+        String charset = null;
+
+        if (entity.getContentType() != null) {
+
+            HeaderElement values[] = entity.getContentType().getElements();
+
+            if (values.length > 0) {
+
+                NameValuePair param = values[0].getParameterByName("charset");
+
+                if (param != null) {
+
+                    charset = param.getValue();
+
+                }
+
+            }
+
+        }
+
+        return charset;
+
     }
 
 

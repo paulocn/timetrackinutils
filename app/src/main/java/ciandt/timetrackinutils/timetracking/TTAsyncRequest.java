@@ -3,13 +3,13 @@ package ciandt.timetrackinutils.timetracking;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpResponse;
-
-import java.net.HttpURLConnection;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by paulocn on 05/10/15.
  */
-public class TTAsyncRequest extends AsyncTask<String, Void, HttpResponse> {
+public class TTAsyncRequest extends AsyncTask<String, Void, JSONObject> {
 
     public TTCallbacks mCallback;
     private TTRequester mRequester;
@@ -19,34 +19,36 @@ public class TTAsyncRequest extends AsyncTask<String, Void, HttpResponse> {
     }
 
     @Override
-    protected HttpResponse doInBackground(String... params) {
+    protected JSONObject doInBackground(String... params) {
         String username, password;
         username = params[0];
         password = params[1];
         mRequester = new TTRequester();
         mRequester.configureRequest(username, password);
-        HttpResponse resp = mRequester.makeRequest();
-        return resp;
+        HttpResponse resp = mRequester.RequestAponta();
+
+        return mRequester.parseJsonResponseFromTT(resp);
     }
 
     @Override
-    protected void onPostExecute(HttpResponse response) {
-        if (response != null) {
-            int statusCode = response.getStatusLine().getStatusCode();
-
-            //Not the best place to error handle, but...
-            switch (statusCode) {
-                case HttpURLConnection.HTTP_OK:
-                    mCallback.requestFinished(true);
-                    break;
-                default:
-                    mCallback.requestFinished(false);
-                    break;
-
+    protected void onPostExecute(JSONObject responseJSON) {
+        if (responseJSON != null) {
+            boolean responseSuccess = false;
+            try {
+                responseSuccess = responseJSON.getBoolean("success");
+            } catch (JSONException e) {
+                responseSuccess = false;
+                e.printStackTrace();
             }
 
+            if (responseSuccess) {
+                //Anything to do here?
+            }
+
+            mCallback.requestFinished(responseJSON);
+
         }else {
-            mCallback.requestFinished(false);
+            mCallback.requestFinished(null);
         }
 
     }

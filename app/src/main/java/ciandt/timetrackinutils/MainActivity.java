@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONObject;
+
 import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
 import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
 import ciandt.timetrackinutils.timetracking.TTCallbacks;
+import ciandt.timetrackinutils.timetracking.TTRequester;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -108,12 +111,17 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void requestFinished(boolean Success) {
+    public void requestFinished(JSONObject responseJSON) {
+
         //Trocar strings hardcoded
-        if (Success) {
+        if (responseJSON != null) {
+
+            String str = TTRequester.parseMessageFromTTJSON(responseJSON);
+            String strs[] = str.split("\n");
+
             new AlertDialog.Builder(this)
                     .setTitle("Time Tracking")
-                    .setMessage("Hora apontada com sucesso!").
+                    .setMessage(strs[1]).
                     setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             try {

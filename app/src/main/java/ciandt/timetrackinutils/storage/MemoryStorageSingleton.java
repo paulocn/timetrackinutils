@@ -30,12 +30,13 @@ public class MemoryStorageSingleton {
         if (getSaved(act)){
             return EncriptedSaver.getDecripted(act, Constants.kPASSWORD);
         }else{
-            return mPassword;
+            //here we should have a action trigger to ask for the user password
+            return null;
         }
     }
 
     private boolean getSaved(Activity act){
-        return EncriptedSaver.getDecripted(act, Constants.kSAVECHECKBOX) == "true";
+        return EncriptedSaver.getDecripted(act, Constants.kPASSWORD) != "";
     }
 
 }

@@ -8,13 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import ciandt.timetrackinutils.storage.Constants;
 import ciandt.timetrackinutils.storage.EncriptedSaver;
-import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
 
 
 /**
@@ -32,9 +29,9 @@ public class UserConfigFragment extends Fragment {
 
     private EditText mEditTestUsername;
     private EditText mEditTestPassword;
-    private CheckBox mCheckBoxSave;
 
     private Button mSaveButton;
+    private Button mDeleteButton;
 
     // TODO: Rename and change types and number of parameters
     public static UserConfigFragment newInstance() {
@@ -64,13 +61,11 @@ public class UserConfigFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mEditTestUsername =  (EditText) getView().findViewById(R.id.editTextUsername);
         mEditTestPassword =  (EditText) getView().findViewById(R.id.editTextPassword);
-        mCheckBoxSave =  (CheckBox) getView().findViewById(R.id.checkBox_save);
         mSaveButton  =  (Button) getView().findViewById(R.id.button_save);
+        mDeleteButton  =  (Button) getView().findViewById(R.id.button_delete);
 
         mEditTestUsername.setText(EncriptedSaver.getDecripted(getActivity(), Constants.kUSERNAME));
         mEditTestPassword.setText(EncriptedSaver.getDecripted(getActivity(), Constants.kPASSWORD));
-        boolean save = EncriptedSaver.getDecripted(getActivity(), Constants.kSAVECHECKBOX) == "false";
-        mCheckBoxSave.setChecked(save);
 
 
         //Listeners
@@ -81,13 +76,13 @@ public class UserConfigFragment extends Fragment {
             }
         });
 
-        mCheckBoxSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                EncriptedSaver.saveEncripted(getActivity(), Constants.kSAVECHECKBOX, (b ? "true" : "false"));
+            public void onClick(View v) {
+                actionDeletePassword(v);
             }
         });
+
 
 
     }
@@ -108,6 +103,11 @@ public class UserConfigFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+    public void actionDeletePassword(View view) {
+        EncriptedSaver.deleteEncripted(getActivity(), Constants.kPASSWORD);
+        mEditTestUsername.setText(EncriptedSaver.getDecripted(getActivity(), Constants.kUSERNAME));
+        mEditTestPassword.setText(EncriptedSaver.getDecripted(getActivity(), Constants.kPASSWORD));
+    }
 
     public void actionSavePassword(View view) {
 
@@ -115,12 +115,7 @@ public class UserConfigFragment extends Fragment {
         String pass = mEditTestPassword.getText().toString();
 
         EncriptedSaver.saveEncripted(getActivity(), Constants.kUSERNAME, user);
-
-        if (mCheckBoxSave.isChecked()) {
-            EncriptedSaver.saveEncripted(getActivity(), Constants.kPASSWORD, pass);
-        }else{
-            MemoryStorageSingleton.getInstance().setPassword(pass);
-        }
+        EncriptedSaver.saveEncripted(getActivity(), Constants.kPASSWORD, pass);
 
     }
 

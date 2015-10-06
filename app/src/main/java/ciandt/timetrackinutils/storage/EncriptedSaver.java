@@ -24,4 +24,11 @@ public class EncriptedSaver {
     }
 
 
+    public static void deleteEncripted(Activity act, String key) {
+        SharedPreferences sharedPref = act.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(key);
+        editor.commit();
+
+    }
 }

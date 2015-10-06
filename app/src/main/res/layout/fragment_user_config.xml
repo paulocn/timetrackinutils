@@ -33,18 +33,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:id="@+id/checkBox_save" />
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Done"
+            android:text="Save"
             android:id="@+id/button_save" />
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Password"
+            android:id="@+id/button_delete" />
     </LinearLayout>
 
 

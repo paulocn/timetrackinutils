@@ -7,4 +7,6 @@ public class Constants {
     public static String kUSERNAME      =       "USERNAME";
     public static String kPASSWORD      =       "PASSWORD";
     public static String kSAVECHECKBOX  =       "SAVECHECKBOX";
+
+    public static boolean kMOCK         =       false;
 }
