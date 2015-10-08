@@ -13,6 +13,23 @@ Simple Android application to register time on CI&amp;T timetracking webapp
     }
 ```
 
+And register the callback:
+```java
+    @Override
+    public void requestFinished(JSONObject responseJSON) {
+
+        if (responseJSON != null) {
+            //this gets the message from the JSON
+            String str = TTRequester.parseMessageFromTTJSON(responseJSON);
+            //DO ACTION
+    
+        }else{
+            //Something bad happened with the request, do something
+        }
+
+    }
+```
+
 ####Adding a new fragment:
 Add a new fragment on the layout and make sure its called here (the last two are currently placeholders):
 
