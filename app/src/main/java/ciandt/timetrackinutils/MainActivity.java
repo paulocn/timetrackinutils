@@ -119,9 +119,14 @@ public class MainActivity extends ActionBarActivity
             String str = TTRequester.parseMessageFromTTJSON(responseJSON);
             String strs[] = str.split("\n");
 
+            String msg = strs[0];
+            if (strs.length > 1){
+                msg = strs[1];
+            }
+
             new AlertDialog.Builder(this)
                     .setTitle("Time Tracking")
-                    .setMessage(strs[1]).
+                    .setMessage(msg).
                     setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             try {
