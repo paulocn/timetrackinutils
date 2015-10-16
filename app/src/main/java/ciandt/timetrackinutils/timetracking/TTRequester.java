@@ -95,8 +95,13 @@ public class TTRequester {
     }
 
     public static JSONObject parseJsonResponseFromTT(HttpResponse response){
+        if (response == null){
+            return null;
+        }
+
         String str = getResponseBody(response);
         JSONObject json = null;
+
         try {
             json = new JSONObject(str);
         } catch (JSONException e) {
@@ -120,6 +125,9 @@ public class TTRequester {
     //Remove from here
     private static String getResponseBody(HttpResponse response) {
 
+        if (response == null){
+            return null;
+        }
         String response_text = null;
         HttpEntity entity = null;
         try {

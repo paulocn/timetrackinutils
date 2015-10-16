@@ -1,8 +1,6 @@
 package ciandt.timetrackinutils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,17 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONObject;
-
-import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
-import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
-import ciandt.timetrackinutils.timetracking.TTCallbacks;
-import ciandt.timetrackinutils.timetracking.TTRequester;
-
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         UserConfigFragment.OnFragmentInteractionListener,
-        TTCallbacks{
+        ApontaFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -58,7 +49,7 @@ public class MainActivity extends ActionBarActivity
         switch (position){
             case 0:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .replace(R.id.container, ApontaFragment.newInstance())
                         .commit();
                 break;
             case 1:
@@ -99,49 +90,6 @@ public class MainActivity extends ActionBarActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-    }
-
-    //isso meio que esta no lugar errado... talvez em um fragmento separado?
-    public void actionApontar(View view) {
-
-        TTAsyncRequest req = new TTAsyncRequest(this);
-        req.execute(MemoryStorageSingleton.getInstance().getUsername(this),
-                    MemoryStorageSingleton.getInstance().getPassword(this));
-
-    }
-
-    @Override
-    public void requestFinished(JSONObject responseJSON) {
-
-        //Trocar strings hardcoded
-        if (responseJSON != null) {
-
-            String str = TTRequester.parseMessageFromTTJSON(responseJSON);
-            String strs[] = str.split("\n");
-
-            String msg = strs[0];
-            if (strs.length > 1){
-                msg = strs[1];
-            }
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Time Tracking")
-                    .setMessage(msg).
-                    setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                this.finalize();
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        }
-                    }).show();
-        }else{
-            new AlertDialog.Builder(this)
-                    .setTitle("Time Tracking")
-                    .setMessage("Falha no apontamento!").show();
-        }
-
     }
 
     @Override
