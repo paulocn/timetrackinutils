@@ -37,10 +37,12 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
     private ImageView mImageRelogio;
     private ImageView mImagePonteiros;
+    private ImageView mImagePonteiros2;
 
     private Button mApontaButton;
 
     private Animation mAnimationRotate;
+    private Animation mAnimationRotateFast;
 
 
     // TODO: Rename and change types and number of parameters
@@ -71,10 +73,12 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
         super.onViewCreated(view, savedInstanceState);
         mImageRelogio =  (ImageView) getView().findViewById(R.id.imageView2);
         mImagePonteiros =  (ImageView) getView().findViewById(R.id.imageView3);
+        mImagePonteiros2 =  (ImageView) getView().findViewById(R.id.imageView4);
 
         mApontaButton  =  (Button) getView().findViewById(R.id.button);
 
         mAnimationRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_center);
+        mAnimationRotateFast = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_center_fast);
 
 
         //Listeners
@@ -91,7 +95,8 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
     private void iniciaAnimacaoApontamento() {
         mApontaButton.setEnabled(false);
-        mImagePonteiros.startAnimation(mAnimationRotate);
+        mImagePonteiros.startAnimation(mAnimationRotateFast);
+        mImagePonteiros2.startAnimation(mAnimationRotate);
         mApontaButton.getCompoundDrawables()[0].setAlpha(45);
     }
 
@@ -124,6 +129,7 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
     public void requestFinished(JSONObject responseJSON) {
 
         mImagePonteiros.clearAnimation();
+        mImagePonteiros2.clearAnimation();
         mApontaButton.setEnabled(true);
         mApontaButton.getCompoundDrawables()[0].setAlpha(255);
         //Trocar strings hardcoded
