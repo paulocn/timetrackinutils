@@ -1,6 +1,8 @@
 # timetrackinutils
 Simple Android application to register time on CI&amp;T timetracking webapp
 
+Dowload [APK](https://github.com/paulocn/timetrackinutils/blob/master/app/deploy/app-debug.apk?raw=true)
+
 ####Making an appointment:
 ```java
     //Example
