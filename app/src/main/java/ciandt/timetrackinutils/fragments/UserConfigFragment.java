@@ -1,4 +1,4 @@
-package ciandt.timetrackinutils;
+package ciandt.timetrackinutils.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import ciandt.timetrackinutils.R;
 import ciandt.timetrackinutils.storage.Constants;
 import ciandt.timetrackinutils.storage.EncriptedSaver;
 

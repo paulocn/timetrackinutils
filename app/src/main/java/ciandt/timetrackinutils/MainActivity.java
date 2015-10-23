@@ -12,6 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ciandt.timetrackinutils.fragments.ApontaFragment;
+import ciandt.timetrackinutils.fragments.NavigationDrawerFragment;
+import ciandt.timetrackinutils.fragments.UserConfigFragment;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         UserConfigFragment.OnFragmentInteractionListener,

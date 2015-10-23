@@ -24,3 +24,14 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:21.0.3'
 }
+
+task deployApks(type:Copy) {
+    description = "Copies APKs to the deploy directory"
+
+    println("Deploying APKs")
+    from 'build/outputs/apk'
+    include '**/*.apk', '**/mapping.txt'
+    into 'deploy'
+}
+
+assembleDebug.finalizedBy deployApks

@@ -1,10 +1,12 @@
-package ciandt.timetrackinutils;
+package ciandt.timetrackinutils.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+
+import ciandt.timetrackinutils.R;
 
 /**
  * Created by paulocn on 20/10/15.

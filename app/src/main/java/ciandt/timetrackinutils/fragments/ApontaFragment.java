@@ -1,4 +1,4 @@
-package ciandt.timetrackinutils;
+package ciandt.timetrackinutils.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import org.json.JSONObject;
 
+import ciandt.timetrackinutils.R;
 import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
 import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
 import ciandt.timetrackinutils.timetracking.TTCallbacks;
