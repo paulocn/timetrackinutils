@@ -30,7 +30,7 @@ task deployApks(type:Copy) {
 
     println("Deploying APKs")
     from 'build/outputs/apk'
-    include '**/*.apk', '**/mapping.txt'
+    include '**/app_debug.apk'
     into 'deploy'
 }
 
