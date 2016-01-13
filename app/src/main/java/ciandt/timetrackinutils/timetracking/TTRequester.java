@@ -114,7 +114,12 @@ public class TTRequester {
     public static String parseMessageFromTTJSON(JSONObject json){
 
         try {
-            return json.getJSONObject("msg").getString("msg");
+            boolean success = json.getBoolean("success");
+            if (success) {
+                return json.getJSONObject("msg").getString("msg");
+            }else{
+                return json.getString("error");
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

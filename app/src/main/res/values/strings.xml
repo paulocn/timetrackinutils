@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Timetrackinutils</string>
+    <string name="app_name">Time Tracking utils</string>
 
     <string name="title_section1">Apontar</string>
     <string name="title_section2">Usuário e Senha</string>
@@ -16,4 +16,10 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_aponta_auto">Apontar Hora</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="timetracking">Time Tracking</string>
+    <string name="falhaApontamento">Falha no apontamento!</string>
 </resources>

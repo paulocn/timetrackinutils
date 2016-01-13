@@ -23,9 +23,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
 }
 
-task deployApks(type:Copy) {
+task deployApks(type: Copy) {
     description = "Copies APKs to the deploy directory"
 
     println("Deploying APKs")
@@ -33,5 +34,6 @@ task deployApks(type:Copy) {
     include '**/app_debug.apk'
     into 'deploy'
 }
+
 
 assembleDebug.finalizedBy deployApks

@@ -19,12 +19,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".widgets.Widget" android:label="Time Tracking Clock Widget">
+
+        <receiver
+            android:name=".widgets.Widget"
+            android:label="Time Tracking Clock Widget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget" />
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
         </receiver>
+
+        <activity
+            android:name=".ApontaAutoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_aponta_auto"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>

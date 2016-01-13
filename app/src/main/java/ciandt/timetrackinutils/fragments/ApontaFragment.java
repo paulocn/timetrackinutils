@@ -21,6 +21,7 @@ import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
 import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
 import ciandt.timetrackinutils.timetracking.TTCallbacks;
 import ciandt.timetrackinutils.timetracking.TTRequester;
+import ciandt.timetrackinutils.utils.notificacoes;
 
 
 /**
@@ -91,6 +92,15 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
             }
         });
 
+        /*int flags = getActivity().getIntent().getFlags();
+        String pkg = getActivity().getIntent().getPackage();
+        if(pkg != null && (flags & Intent.FLAG_ACTIVITY_CLEAR_TASK) > 0) {
+            actionApontar(null);
+            iniciaAnimacaoApontamento();
+        }else{
+            //Log.i("MUSICCONTROL", "app started with user tap");
+        }*/
+
 
     }
 
@@ -143,9 +153,9 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
             if (strs.length > 1){
                 msg = strs[1];
             }
-
+            notificacoes.notifyOfAppointment(msg, getActivity());
             new AlertDialog.Builder(getActivity())
-                    .setTitle("Time Tracking")
+                    .setTitle(R.string.timetracking)
                     .setMessage(msg).
                     setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -157,9 +167,10 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
                         }
                     }).show();
         }else{
+            notificacoes.notifyOfAppointment(getActivity().getString(R.string.falhaApontamento), getActivity());
             new AlertDialog.Builder(getActivity())
-                    .setTitle("Time Tracking")
-                    .setMessage("Falha no apontamento!").show();
+                    .setTitle(R.string.timetracking)
+                    .setMessage(R.string.falhaApontamento).show();
         }
 
     }

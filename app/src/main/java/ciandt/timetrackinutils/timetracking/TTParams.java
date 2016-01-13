@@ -60,7 +60,7 @@ public class TTParams {
             mHeaders = new ArrayList<NameValuePair>();
             mHeaders.add(new BasicNameValuePair("Content-type", "application/x-www-form-urlencoded"));
             mHeaders.add(new BasicNameValuePair("Accept", "Accept:*/*"));
-            mHeaders.add(new BasicNameValuePair("Cookie", "clockDeviceToken=nHuH/qaEaN1TzYclwDbze2UcjZeQtjjudvHqcjFufA=="));
+            mHeaders.add(new BasicNameValuePair("Cookie", "clockDeviceToken2=nHuH/qaEaN1TzYclwDbze2UcjZeQtjjudvHqcjFufA=="));
             mHeaders.add(new BasicNameValuePair("Origin", "android"));
             mHeaders.add(new BasicNameValuePair("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.94 Safari/537.36"));
         }
