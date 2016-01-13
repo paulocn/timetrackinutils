@@ -18,7 +18,7 @@ public class notificacoes {
     public static void notifyOfAppointment(String message, Activity act){
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(act)
-                        .setSmallIcon(R.drawable.relogio_tt_not)
+                        .setSmallIcon(R.drawable.ic_stat_tt)
                         .setContentTitle(act.getString(R.string.timetracking))
                         .setContentText(message);
 
