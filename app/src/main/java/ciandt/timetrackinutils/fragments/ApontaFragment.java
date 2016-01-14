@@ -13,15 +13,19 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 
 import ciandt.timetrackinutils.R;
+import ciandt.timetrackinutils.storage.ApontaSaver;
 import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
 import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
 import ciandt.timetrackinutils.timetracking.TTCallbacks;
 import ciandt.timetrackinutils.timetracking.TTRequester;
 import ciandt.timetrackinutils.utils.notificacoes;
+import ciandt.timetrackinutils.utils.utils;
 
 
 /**
@@ -40,6 +44,8 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
     private ImageView mImageRelogio;
     private ImageView mImagePonteiros;
     private ImageView mImagePonteiros2;
+
+    private TextView mTxtLastAponta;
 
     private Button mApontaButton;
 
@@ -82,6 +88,7 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
         mAnimationRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_center);
         mAnimationRotateFast = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_center_fast);
 
+        mTxtLastAponta = (TextView) getView().findViewById(R.id.txt_lastapontamento);
 
         //Listeners
         mApontaButton.setOnClickListener(new View.OnClickListener() {
@@ -92,16 +99,17 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
             }
         });
 
-        /*int flags = getActivity().getIntent().getFlags();
-        String pkg = getActivity().getIntent().getPackage();
-        if(pkg != null && (flags & Intent.FLAG_ACTIVITY_CLEAR_TASK) > 0) {
-            actionApontar(null);
-            iniciaAnimacaoApontamento();
-        }else{
-            //Log.i("MUSICCONTROL", "app started with user tap");
-        }*/
+        carregaTextoApontamento();
 
+    }
 
+    private void carregaTextoApontamento() {
+        String ultimo = ApontaSaver.getLastNApontamentosStringyfied(1, getActivity()).get(0);
+
+        mTxtLastAponta.setText(
+                getString( R.string.ultimoapontamento) +
+                " " +
+                ultimo);
     }
 
     private void iniciaAnimacaoApontamento() {
@@ -147,6 +155,7 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
         if (responseJSON != null) {
 
             String str = TTRequester.parseMessageFromTTJSON(responseJSON);
+
             String strs[] = str.split("\n");
 
             String msg = strs[0];
@@ -166,6 +175,13 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
                             }
                         }
                     }).show();
+
+
+            if ((str != null) && (!utils.checkForError(str))){
+                ApontaSaver.addAndSaveDate(new DateTime(), getActivity());
+            }
+
+
         }else{
             notificacoes.notifyOfAppointment(getActivity().getString(R.string.falhaApontamento), getActivity());
             new AlertDialog.Builder(getActivity())
@@ -173,19 +189,10 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
                     .setMessage(R.string.falhaApontamento).show();
         }
 
+
+
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);

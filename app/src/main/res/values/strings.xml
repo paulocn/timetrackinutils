@@ -22,4 +22,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="timetracking">Time Tracking</string>
     <string name="falhaApontamento">Falha no apontamento!</string>
+    <string name="ultimoapontamento">Último:</string>
+    <string name="nuncaapontou">Nunca</string>
 </resources>
