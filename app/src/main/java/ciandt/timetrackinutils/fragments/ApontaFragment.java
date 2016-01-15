@@ -108,7 +108,9 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
     private void carregaTextoApontamento() {
         ArrayList<String> arr = ApontaSaver.getLastNApontamentosStringyfied(20, getActivity());
+        if (arr == null) return;
         String ultimo = arr.get(arr.size() - 1);
+        if (ultimo == null) return;
 
         mTxtLastAponta.setText(
                 getString( R.string.ultimoapontamento) +
