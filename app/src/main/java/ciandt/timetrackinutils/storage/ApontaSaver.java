@@ -98,7 +98,7 @@ public class ApontaSaver {
         if (mArrDates == null){
             loadDates(act);
         }
-        if (mArrDates != null){
+        if (mArrDates != null && mArrDates.size() > 0){
             arr = new ArrayList<String>();
             int max = Math.min(n, mArrDates.size());
             for (int i=0; i < max; i++) {

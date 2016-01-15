@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import ciandt.timetrackinutils.R;
 import ciandt.timetrackinutils.storage.Constants;
@@ -69,6 +71,9 @@ public class UserConfigFragment extends Fragment {
         mEditTestPassword.setText(EncriptedSaver.getDecripted(getActivity(), Constants.kPASSWORD));
 
 
+        mEditTestUsername.setImeActionLabel(getActivity().getString(R.string.next), KeyEvent.KEYCODE_ENTER);
+        mEditTestPassword.setImeActionLabel(getActivity().getString(R.string.save), KeyEvent.KEYCODE_ENTER);
+
         //Listeners
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +89,16 @@ public class UserConfigFragment extends Fragment {
             }
         });
 
+        mEditTestPassword.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    actionSavePassword(v);
+                    return true;
+                }
+                return false;
+            }
+        });
 
 
     }
@@ -117,6 +132,8 @@ public class UserConfigFragment extends Fragment {
 
         EncriptedSaver.saveEncripted(getActivity(), Constants.kUSERNAME, user);
         EncriptedSaver.saveEncripted(getActivity(), Constants.kPASSWORD, pass);
+
+        Toast.makeText(getActivity(), getActivity().getString(R.string.saved), Toast.LENGTH_SHORT).show();
 
     }
 

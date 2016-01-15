@@ -24,4 +24,7 @@
     <string name="falhaApontamento">Falha no apontamento!</string>
     <string name="ultimoapontamento">Último:</string>
     <string name="nuncaapontou">Nunca</string>
+    <string name="next">Próximo</string>
+    <string name="save">Salvar</string>
+    <string name="saved">Salvo!</string>
 </resources>

@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextUsername"
+            android:singleLine="true"
             android:layout_gravity="center" />
 
 
@@ -36,6 +37,7 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/editTextPassword"
+            android:singleLine="true"
             android:layout_gravity="center" />
 
     <LinearLayout
