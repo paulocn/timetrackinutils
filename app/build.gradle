@@ -27,14 +27,17 @@ dependencies {
     compile 'net.danlew:android.joda:2.9.1'
 }
 
-task deployApks(type: Copy) {
-    description = "Copies APKs to the deploy directory"
 
-    println("Deploying APKs")
+task copyJarToBin(type: Copy) {
+    from 'build/libs/GradleJarProject.jar'
+    into "d:/tmp"
+}
+
+task copyAPKs(type: Copy) {
+    println("Deploying APKs, method 2")
+
     from 'build/outputs/apk'
-    include '**/app_debug.apk'
     into 'deploy'
 }
 
-
-assembleDebug.finalizedBy deployApks
+assembleDebug.finalizedBy(copyAPKs)

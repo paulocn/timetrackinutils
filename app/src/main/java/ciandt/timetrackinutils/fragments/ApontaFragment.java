@@ -18,6 +18,8 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import ciandt.timetrackinutils.R;
 import ciandt.timetrackinutils.storage.ApontaSaver;
 import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
@@ -101,10 +103,12 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
         carregaTextoApontamento();
 
+
     }
 
     private void carregaTextoApontamento() {
-        String ultimo = ApontaSaver.getLastNApontamentosStringyfied(1, getActivity()).get(0);
+        ArrayList<String> arr = ApontaSaver.getLastNApontamentosStringyfied(20, getActivity());
+        String ultimo = arr.get(arr.size() - 1);
 
         mTxtLastAponta.setText(
                 getString( R.string.ultimoapontamento) +
@@ -179,6 +183,7 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
             if ((str != null) && (!utils.checkForError(str))){
                 ApontaSaver.addAndSaveDate(new DateTime(), getActivity());
+                carregaTextoApontamento();
             }
 
 
