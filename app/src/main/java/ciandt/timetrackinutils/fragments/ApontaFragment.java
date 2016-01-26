@@ -64,6 +64,7 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
     private boolean tempoAproximado = true;
     private Handler mTextoTimerHandler;
+    private Runnable mTextoTimerHandlerRunnable;
     private int mAtualizaCount = 0;
 
 
@@ -160,10 +161,13 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
     }
 
     private void trocaMostraTempo() {
+        stopHandlerTexto();
         tempoAproximado = !tempoAproximado;
         mAnimationCardLeftOut.start();
         if (tempoAproximado == false){
             startaTimerAtualizaTexto();
+        }else{
+            mAtualizaCount = 100;
         }
 
     }
@@ -172,21 +176,21 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
         mAtualizaCount = 0;
         if (mTextoTimerHandler == null) {
             mTextoTimerHandler = new Handler();
-        }
-        mTextoTimerHandler.postDelayed(new Runnable() {
-            public void run() {
-                setTextoTempoExato();
-                mAtualizaCount++;
-                if (mAtualizaCount < 5){
-                    if (!tempoAproximado) {
+            mTextoTimerHandlerRunnable = new Runnable() {
+                public void run() {
+                    mostraTempo();
+                    mAtualizaCount++;
+                    if (mAtualizaCount < 5){
                         mTextoTimerHandler.postDelayed(this, 1000);
+                    }else{
+                        trocaMostraTempo();
                     }
-                }else{
-                    trocaMostraTempo();
-                }
 
-            }
-        }, 1000);
+                }
+            };
+        }
+
+        mTextoTimerHandler.postDelayed(mTextoTimerHandlerRunnable, 1000);
     }
 
 
@@ -259,6 +263,13 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        stopHandlerTexto();
+    }
+
+    private void stopHandlerTexto(){
+        if (mTextoTimerHandler!= null) {
+            mTextoTimerHandler.removeCallbacks(mTextoTimerHandlerRunnable);
+        }
     }
 
     public void actionApontar(View view) {
