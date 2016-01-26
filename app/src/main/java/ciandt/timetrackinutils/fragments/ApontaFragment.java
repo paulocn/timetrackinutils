@@ -1,14 +1,19 @@
 package ciandt.timetrackinutils.fragments;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -26,6 +31,7 @@ import ciandt.timetrackinutils.storage.MemoryStorageSingleton;
 import ciandt.timetrackinutils.timetracking.TTAsyncRequest;
 import ciandt.timetrackinutils.timetracking.TTCallbacks;
 import ciandt.timetrackinutils.timetracking.TTRequester;
+import ciandt.timetrackinutils.utils.dateutils;
 import ciandt.timetrackinutils.utils.notificacoes;
 import ciandt.timetrackinutils.utils.utils;
 
@@ -53,6 +59,12 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
     private Animation mAnimationRotate;
     private Animation mAnimationRotateFast;
+
+    private ObjectAnimator mAnimationCardLeftOut;
+
+    private boolean tempoAproximado = true;
+    private Handler mTextoTimerHandler;
+    private int mAtualizaCount = 0;
 
 
     // TODO: Rename and change types and number of parameters
@@ -90,7 +102,11 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
         mAnimationRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_center);
         mAnimationRotateFast = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_center_fast);
 
+
         mTxtLastAponta = (TextView) getView().findViewById(R.id.txt_lastapontamento);
+        //WATCH THIS ORDER!
+        criaFlipAnimation();
+
 
         //Listeners
         mApontaButton.setOnClickListener(new View.OnClickListener() {
@@ -101,21 +117,124 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
             }
         });
 
-        carregaTextoApontamento();
+        mTxtLastAponta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trocaMostraTempo();
+                Log.d("ANIMACAO", "OI");
+            }
+        });
+
+        mostraTempo();
 
 
     }
 
-    private void carregaTextoApontamento() {
-        ArrayList<String> arr = ApontaSaver.getLastNApontamentosStringyfied(20, getActivity());
-        if (arr == null) return;
-        String ultimo = arr.get(arr.size() - 1);
-        if (ultimo == null) return;
+    private void criaFlipAnimation(){
+        mAnimationCardLeftOut = ObjectAnimator.ofFloat(mTxtLastAponta, "rotationY", 0.0f, 360f);
+        mAnimationCardLeftOut.setDuration(150);
+        mAnimationCardLeftOut.setRepeatCount(1);
+        mAnimationCardLeftOut.setInterpolator(new AccelerateDecelerateInterpolator());
+        mAnimationCardLeftOut.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mostraTempo();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+
+        });
+    }
+
+    private void trocaMostraTempo() {
+        tempoAproximado = !tempoAproximado;
+        mAnimationCardLeftOut.start();
+        if (tempoAproximado == false){
+            startaTimerAtualizaTexto();
+        }
+
+    }
+
+    private void startaTimerAtualizaTexto() {
+        mAtualizaCount = 0;
+        if (mTextoTimerHandler == null) {
+            mTextoTimerHandler = new Handler();
+        }
+        mTextoTimerHandler.postDelayed(new Runnable() {
+            public void run() {
+                setTextoTempoExato();
+                mAtualizaCount++;
+                if (mAtualizaCount < 5){
+                    if (!tempoAproximado) {
+                        mTextoTimerHandler.postDelayed(this, 1000);
+                    }
+                }else{
+                    trocaMostraTempo();
+                }
+
+            }
+        }, 1000);
+    }
+
+
+    private DateTime getUltimoApontamento(){
+        ArrayList<DateTime> arr = ApontaSaver.getLastApontamentos(getActivity());
+        if ((arr != null) && (arr.size() > 0)){
+            return arr.get(arr.size() - 1);
+        }
+        return null;
+    }
+
+    private void setTextoTmpAprox(){
         mTxtLastAponta.setText(
                 getString( R.string.ultimoapontamento) +
-                " " +
-                ultimo);
+                        " " +
+                        carregaTextoApontamentoAproximado());
+    }
+
+    private void setTextoTempoExato(){
+        String str = getUltimoAptStr();
+        if (str != null) {
+            mTxtLastAponta.setText(str);
+        }else{
+            getString(R.string.nuncaapontou);
+        }
+    }
+
+    private void mostraTempo(){
+        if (tempoAproximado){
+            setTextoTmpAprox();
+        }else{
+            setTextoTempoExato();
+        }
+
+    }
+
+    private String getUltimoAptStr(){
+        DateTime t = getUltimoApontamento();
+        if (t == null) return null;
+        return dateutils.hoursDifference(DateTime.now(), t);
+    }
+
+    private String carregaTextoApontamentoAproximado() {
+        ArrayList<String> arr = ApontaSaver.getLastNApontamentosContextualized(20, getActivity());
+        if (arr == null) return null;
+        String ultimo = arr.get(arr.size() - 1);
+        if (ultimo == null) return null;
+        return ultimo;
     }
 
     private void iniciaAnimacaoApontamento() {
@@ -185,7 +304,7 @@ public class ApontaFragment extends Fragment implements TTCallbacks{
 
             if ((str != null) && (!utils.checkForError(str))){
                 ApontaSaver.addAndSaveDate(new DateTime(), getActivity());
-                carregaTextoApontamento();
+                mostraTempo();
             }
 
 

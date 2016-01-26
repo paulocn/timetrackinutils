@@ -93,7 +93,7 @@ public class ApontaSaver {
         }
     }
 
-    public static ArrayList<String> getLastNApontamentosStringyfied(int n, Activity act){
+    public static ArrayList<String> getLastNApontamentosContextualized(int n, Activity act){
         ArrayList<String> arr = null;
         if (mArrDates == null){
             loadDates(act);
@@ -113,6 +113,13 @@ public class ApontaSaver {
         }
 
         return arr;
+    }
+
+    public static ArrayList<DateTime> getLastApontamentos(Activity act){
+        if (mArrDates == null){
+            loadDates(act);
+        }
+        return mArrDates;
     }
 
 
